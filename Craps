@@ -1,0 +1,151 @@
+/* craps game
+Purpose: The purpose of this program is to play a game of Craps with
+the user
+ */
+import java.util.Random;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+
+
+public class Craps {
+   // create random number generator for use in method rollDice
+   private static final Random randomNumbers = new Random();
+   // enumeration with constants that represent the game status
+   private enum Status {CONTINUE, WON, LOST};
+
+   // constants that represent the common rolls of the dice
+   private static final int SNAKE_EYES = 2;
+   private static final int TREY = 3;
+   private static final int SEVEN = 7;
+   private static final int YO_LEVEN = 11;
+   private static final int BOX_CARS = 12;
+
+   // rollDice method
+   public static int rollDice() {
+      int die1 = randomNumbers.nextInt(6);
+      int die2 = randomNumbers.nextInt(6);
+      int sum = die1 + die2;
+      System.out.println("Player rolled "+die1+"+"die2+"="+sum);
+      return sum;
+   }
+
+   // chatter method for the different messages for the situations
+   public static void chatter(Status gameStatus){
+      int random = randomNumbers.nextInt(4);
+      if (gameStatus == Status.WON) {
+         switch (random) {
+            case 1:
+               System.out.println("Wow, you won. Good job!");
+               break;
+            case 2:
+               System.out.println("Fantastic job!");
+               break;
+            case 3:
+               System.out.println("You win! Congrats!");
+               break;
+            case 4:
+               System.out.println("I knew you'd win, nice job.");
+         }
+      }
+   }
+
+   // plays one game of craps
+   private static void main(String[] args) throws Exception {
+      int myPoint = 0;
+      // this adds a new variable bank balance and wager
+      int bankBalance = 1000;
+      int wager;
+      BufferedReader bR = new BufferedReader(new InputStreamReader(System.in));
+
+      // this loop keeps asking the user to enter a valid wager
+      while(true) {
+         System.out.println("Enter your wager!");
+         wager = Integer.parseInt(bR.readLine());
+         if (wager <= bankBalance)
+            break;
+         else
+            System.out.println("You do not have enough money!");
+      }
+      Status gameStatus;
+      int sumOfDice = rollDice();
+      switch(sumOfDice) {
+         case SEVEN:
+         case YO_LEVEN:
+            gameStatus = Status.WON;
+            chatter(gameStatus);
+            break;
+         case SNAKE_EYES:
+         case TREY:
+         case BOX_CARS:
+            gameStatus = Status.LOST;
+            chatter(gameStatus);
+            break;
+         default:
+            gameStatus = Status.CONTINUE;
+            chatter(gameStatus);
+            myPoint = sumOfDice;
+            System.out.println("Point is "+myPoint);
+            break;
+      }
+      while (gameStatus == Status.CONTINUE) {
+         sumOfDice = rollDice();
+
+         if(sumOfDice == myPoint) {
+            gameStatus = Status.WON;
+         else if (sumOfDice == SEVEN)
+            gameStatus = Status.LOST;
+
+            chatter(gameStatus);
+      }
+      if (gameStatus == Status.WON) {
+         System.out.println("Player wins");
+         bankBalance = bankBalance + wager;
+         System.out.println("Your new bank balance is now " + bankBalance);
+      }
+      else {
+         System.out.println("Player loses");
+         bankBalance = bankBalance - wager;
+         System.out.println("Your new bank balance is now " + bankBalance);
+         if (bankBalance == 0)
+            System.out.println("Sorry. You busted!");
+      }
+
+      }
+
+          if (gameStatus == Status.LOST) {
+            int random = randomNumbers.nextInt(4);
+            switch(random) {
+               case 1:
+                  System.out.println("Sorry, better luck next time");
+                  break;
+               case 2:
+                  System.out.println("Ha! You lost!");
+                  break;
+               case 3:
+                  System.out.println("Looks like you have some bad luck today!");
+                  break;
+               case 4:
+                  System.out.println("One day you will win, today is not that day.");
+                  break;
+            }
+         }
+         else {
+            int random = randomNumbers.nextInt(4);
+            switch(random) {
+               case 1:
+                  System.out.println("Oh, you're going for broke huh?");
+                  break;
+               case 2:
+                  System.out.println("Aw c'mon, take a chance!");
+                  break;
+               case 3:
+                  System.out.println("You're up big. Now's the time to cash in your chips!");
+                  break;
+               case 4:
+                  System.out.println("Keep playing!");
+                  break;
+            }
+         }
+      }
+}
